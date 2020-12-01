@@ -8,8 +8,15 @@ const config = {
     parent: 'phaser-example',
     width: 900,
     height: 600,
-    // scene: [PreloadScene, GameScene]
-    scene: GameScene
+    // scene: [PreloadScene, GameScene],
+    scene: GameScene,
+    physics: {
+      default: 'arcade',
+      arcade: {
+        debug: true,
+        gravity: {y: 0}
+      }
+    }
 };
 
 export { config };

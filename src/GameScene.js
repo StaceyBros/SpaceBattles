@@ -166,7 +166,7 @@ class GameScene extends Scene {
     collectDiamond(ship, diamond) {
       diamond.disableBody(true, true);
 
-      this.score += 50,
+      this.score += 60,
       this.scoreText.setText('Score: ' + this.score);
     }
 

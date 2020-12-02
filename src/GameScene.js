@@ -20,6 +20,8 @@ class GameScene extends Scene {
     this.load.spritesheet('exp','assets/exp.png', {
       frameWidth: 64, frameHeight: 64
     });
+    this.load.audio('soundTrack', ['assets/audio/Patrol.mp3', 'assets/audio/Patrol.ogg']);
+    this.load.audio('laser', 'assets/audio/laserfire.ogg');
     }
 
   // ===============================================================
@@ -30,6 +32,9 @@ class GameScene extends Scene {
     this.background = this.add.tileSprite(0, 0, 900, 600, "background")
     .setOrigin(0);
 
+    this.laser = this.sound.add('laser');
+
+    this.createMusic();
     this.createShip();
     this.createAsteroid();
     this.createCursor();
@@ -37,8 +42,17 @@ class GameScene extends Scene {
     this.createDiamond();
     this.createExplosion();
 
+
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
+  }
+
+  createMusic(){
+
+    this.sound = this.sound.add('soundTrack');
+    this.sound.play();
+    this.sound.loop = true;
+    this.sound.setVolume(.1);
   }
 
   createShip(){
@@ -276,6 +290,7 @@ class GameScene extends Scene {
 
         if(this.keySpace.isDown){
               this.createBullet();
+              this.laser.play();
           }
 
     //=================================

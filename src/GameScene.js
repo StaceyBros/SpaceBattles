@@ -16,7 +16,7 @@ class GameScene extends Scene {
     this.load.image('asteroid', 'assets/asteroid.png');
     this.load.atlas('diamond', 'assets/gems.png', 'assets/gems.json');
     this.load.atlas('prism', 'assets/gems.png', 'assets/gems.json');
-    this.load.sprite('bullet', 'assets/beams.png');
+    this.load.image('bullet', 'assets/bullet.png');
     }
 
   // ===============================================================
@@ -27,12 +27,11 @@ class GameScene extends Scene {
     this.background = this.add.tileSprite(0, 0, 900, 600, "background")
     .setOrigin(0);
 
-    this.bullet = this.add.image(500, 50, "bullet")
-
     this.createShip();
     this.createAsteroid();
     this.createCursor();
     this.createRubies();
+
 
     this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
@@ -171,6 +170,39 @@ class GameScene extends Scene {
       this.scoreText.setText('Score: ' + this.score);
     }
 
+    createBullet(){
+
+      this.bulletGroup = this.physics.add.group({
+        key:'bullet',
+        frameQuantity: 2,
+        // active: false,
+        // visible: false,
+        setRotation: { value: 300, step: 0.10 },
+        CollideWorldBounds: true,
+        setXY: { x: this.ship.x - 10, y: this.ship.y + -50, stepX:25 }
+      });
+      this.bulletGroup.setVelocityY(-160);
+    }
+
+    // shootLaser(){
+    //   this.bulletGroup.fireLaser();
+    // }
+    //
+    // fireLaser() {
+    //   const laser = this.getFirstDead(false);
+    //     if (laser){
+    //       laser.fire();
+    //     }
+    // }
+    //
+    // fire() {
+    //   this.setActive(true);
+    //   this.setVisible(true);
+    //
+    //   this.bulletGroup.setVelocityY(-160);
+    // }
+
+
     // ===============================================================
     // Update
 
@@ -201,9 +233,17 @@ class GameScene extends Scene {
         }
 
         if(this.keySpace.isDown){
-          this.ship.setVelocityY(-160);
+            let count = 0;
+            if (count === 0){
+              this.createBullet();
+              return count = 1;
+              console.log(count);
+            } else if (count === 1){
+              return count = 0;
+              console.log(count);
+            }
+          }
         }
-    }
 }
 
 export default GameScene;

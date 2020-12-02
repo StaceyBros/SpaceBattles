@@ -17,6 +17,9 @@ class GameScene extends Scene {
     this.load.atlas('diamond', 'assets/gems.png', 'assets/gems.json');
     this.load.atlas('prism', 'assets/gems.png', 'assets/gems.json');
     this.load.image('bullet', 'assets/bullet.png');
+    this.load.spritesheet('exp','assets/exp.png', {
+      frameWidth: 64, frameHeight: 64
+    });
     }
 
   // ===============================================================
@@ -32,6 +35,7 @@ class GameScene extends Scene {
     this.createCursor();
     this.createPrism();
     this.createDiamond();
+    this.createExplosion();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
@@ -182,8 +186,6 @@ class GameScene extends Scene {
       this.bulletGroup = this.physics.add.group({
         key:'bullet',
         frameQuantity: 2,
-        // active: false,
-        // visible: false,
         setRotation: { value: 300, step: 0.10 },
         CollideWorldBounds: true,
         setXY: { x: this.ship.x - 10, y: this.ship.y + -50, stepX:25 }
@@ -192,25 +194,53 @@ class GameScene extends Scene {
 
       this.physics.add.collider( this.bulletGroup,this.asteroidGroup, this.hit1, null, this);
 
-      this.physics.add.collider(this.asteroidGroup1, this.bulletGroup, this.hit2);
+      this.physics.add.collider( this.bulletGroup,this.asteroidGroup1, this.hit2, null, this);
 
-      this.physics.add.collider(this.asteroidGroup2, this.bulletGroup, this.hit3);
+      this.physics.add.collider( this.bulletGroup,this.asteroidGroup2, this.hit3, null, this);
+
+      const frameNames = this.anims.generateFrameNumbers('exp');
+
+      //reverses the frameNumbers array in f2
+      const f2 = frameNames.slice();
+      f2.reverse();
+
+      // adds the two arrays
+      const f3 = f2.concat(frameNames);
+
+      this.anims.create({
+        key: 'boom',
+        frames: f3,
+        frameRate: 48,
+        repeat: false
+      });
+
     }
 
-    hit1(asteroid, bullet){
+    createExplosion(){
+
+    }
+
+    hit1(bullet, asteroid){
+      bullet.destroy();
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
       asteroid.destroy();
+    }
+
+    hit2(bullet, asteroid){
+      asteroid.destroy();
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(2);
+      this.explosion.play('boom');
       bullet.destroy();
     }
 
-    hit2(asteroid, bullet){
+    hit3(bullet, asteroid){
       asteroid.destroy();
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(1.3);
+      this.explosion.play('boom');
       bullet.destroy();
     }
 
-    hit3(asteroid, bullet){
-      asteroid.destroy();
-      bullet.destroy();
-    }
 
 
     // =====================================================

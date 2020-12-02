@@ -10,16 +10,14 @@ class PreloadScene extends Scene {
   }
 
   preload() {
-    this.load.image('space', 'assets/SpaceBackground1.png');
-    this.load.image('flare', 'assets/blue_flare.jpg');
+    this.load.image('space', 'assets/space2.jpg');
     this.load.image('knighthawks', 'assets/font/knight3.png');
   }
 
   create() {
     const space = this.add.image(500, 250, 'space');
-    const flare = this.add.image(430, 300, 'flare').alpha=.5;
 
-    const play = this.add.text(399, 299, 'play').setScale(4);
+    const play = this.add.text(370, 250, 'play').setScale(4).setOrigin(0);;
 
 
     this.cache.bitmapFont.add('knighthawks', Phaser.GameObjects.RetroFont.Parse(this, config));

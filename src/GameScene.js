@@ -30,12 +30,11 @@ class GameScene extends Scene {
     this.createShip();
     this.createAsteroid();
     this.createCursor();
-    this.createRubies();
-
-
-    this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.createPrism();
+    this.createDiamond();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
+
   }
 
   createShip(){
@@ -126,34 +125,40 @@ class GameScene extends Scene {
 
     createCursor() {
       this.cursors = this.input.keyboard.createCursorKeys();
+      this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
-    createRubies(){
+    createPrism(){
 
-      this.diamond = this.physics.add.sprite(300, 100, 'diamond').setScale(0.7);
-      this.prism = this.physics.add.sprite(500, 200, 'prism').setScale(0.7);
+      this.prism = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550), 'prism').setScale(0.7);
 
-        //rotating effect
+          //rotating effect
         this.anims.create({
-        key: 'diamond',
-        frames: this.anims.generateFrameNames('diamond', { prefix: 'diamond_', end: 15, zeroPad: 4 }),
-        frameRate: 10,
-        repeat: -1
-      });
+          key: 'prism',
+          frames: this.anims.generateFrameNames('prism', { prefix: 'prism_', end: 15, zeroPad: 4 }),
+          frameRate: 10,
+          repeat: -1
+        });
+
+      this.prism.play('prism');
+
+      this.physics.add.overlap(this.ship, this.prism, this.collectPrism, null, this);
+
+    }
+
+    createDiamond(){
+      this.diamond = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550),'diamond').setScale(0.7);
 
       this.anims.create({
-        key: 'prism',
-        frames: this.anims.generateFrameNames('prism', { prefix: 'prism_', end: 15, zeroPad: 4 }),
-        frameRate: 10,
-        repeat: -1
+      key: 'diamond',
+      frames: this.anims.generateFrameNames('diamond', { prefix: 'diamond_', end: 15, zeroPad: 4 }),
+      frameRate: 10,
+      repeat: -1
       });
 
-    this.diamond.play('diamond');
-    this.prism.play('prism');
+      this.diamond.play('diamond');
 
-    this.physics.add.overlap(this.ship, this.prism, this.collectPrism, null, this);
-
-    this.physics.add.overlap(this.ship, this.diamond, this.collectDiamond, null, this);
+      this.physics.add.overlap(this.ship, this.diamond, this.collectDiamond, null, this);
     }
 
     collectPrism(ship, prism) {
@@ -161,6 +166,7 @@ class GameScene extends Scene {
 
       this.score += 10,
       this.scoreText.setText('Score: ' + this.score);
+      this.prism = false;
     }
 
     collectDiamond(ship, diamond) {
@@ -168,6 +174,7 @@ class GameScene extends Scene {
 
       this.score += 60,
       this.scoreText.setText('Score: ' + this.score);
+      this.diamond = false;
     }
 
     createBullet(){
@@ -182,28 +189,31 @@ class GameScene extends Scene {
         setXY: { x: this.ship.x - 10, y: this.ship.y + -50, stepX:25 }
       });
       this.bulletGroup.setVelocityY(-160);
+
+      this.physics.add.collider( this.bulletGroup,this.asteroidGroup, this.hit1, null, this);
+
+      this.physics.add.collider(this.asteroidGroup1, this.bulletGroup, this.hit2);
+
+      this.physics.add.collider(this.asteroidGroup2, this.bulletGroup, this.hit3);
     }
 
-    // shootLaser(){
-    //   this.bulletGroup.fireLaser();
-    // }
-    //
-    // fireLaser() {
-    //   const laser = this.getFirstDead(false);
-    //     if (laser){
-    //       laser.fire();
-    //     }
-    // }
-    //
-    // fire() {
-    //   this.setActive(true);
-    //   this.setVisible(true);
-    //
-    //   this.bulletGroup.setVelocityY(-160);
-    // }
+    hit1(asteroid, bullet){
+      asteroid.destroy();
+      bullet.destroy();
+    }
+
+    hit2(asteroid, bullet){
+      asteroid.destroy();
+      bullet.destroy();
+    }
+
+    hit3(asteroid, bullet){
+      asteroid.destroy();
+      bullet.destroy();
+    }
 
 
-    // ===============================================================
+    // =====================================================
     // Update
 
     update() {
@@ -218,6 +228,8 @@ class GameScene extends Scene {
       // cursor controls
       this.ship.setVelocity(0);
 
+    //=================================
+    //Player Controls
         if (this.cursors.left.isDown) {
           this.ship.setVelocityX(-160);
         }
@@ -233,15 +245,56 @@ class GameScene extends Scene {
         }
 
         if(this.keySpace.isDown){
-            let count = 0;
-            if (count === 0){
               this.createBullet();
-              return count = 1;
-              console.log(count);
-            } else if (count === 1){
-              return count = 0;
-              console.log(count);
-            }
+          }
+
+    //=================================
+    //Calls the prism 5 seconds after it collected
+          if (this.prism === false){
+            this.time.addEvent({
+            delay: 7000,
+            callback: ()=>{
+
+              this.prism = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550), 'prism').setScale(0.7);
+
+                //rotating effect
+              this.anims.create({
+                key: 'prism',
+                frames: this.anims.generateFrameNames('prism', { prefix: 'prism_', end: 15, zeroPad: 4 }),
+                frameRate: 10,
+                repeat: -1
+              });
+
+            this.prism.play('prism');
+
+            this.physics.add.overlap(this.ship, this.prism, this.collectPrism, null, this);
+            },
+            loop: false
+            })
+            this.prism = true;
+          }
+
+          if (this.diamond === false){
+            this.time.addEvent({
+            delay: 20000,
+            callback: ()=>{
+
+              this.diamond = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550),'diamond').setScale(0.7);
+
+              this.anims.create({
+              key: 'diamond',
+              frames: this.anims.generateFrameNames('diamond', { prefix: 'diamond_', end: 15, zeroPad: 4 }),
+              frameRate: 10,
+              repeat: -1
+              });
+
+              this.diamond.play('diamond');
+
+              this.physics.add.overlap(this.ship, this.diamond, this.collectDiamond, null, this);
+            },
+            loop: false
+            })
+            this.diamond = true;
           }
         }
 }

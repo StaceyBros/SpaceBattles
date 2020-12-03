@@ -1,13 +1,14 @@
 import { Scene } from 'phaser';
 import { config } from './config';
 
-class PreloadScene extends Scene {
+class GameOver extends Scene {
   constructor() {
-    super('preload')
+    super('over')
   }
 
   preload() {
     this.load.image('space', 'assets/space2.jpg');
+    this.load.image('knighthawks', 'assets/font/knight3.png');
   }
 
   create() {
@@ -22,4 +23,4 @@ class PreloadScene extends Scene {
   }
 }
 
-export default PreloadScene;
+export default GameOver;

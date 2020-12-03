@@ -40,8 +40,7 @@ class GameScene extends Scene {
     this.createCursor();
     this.createPrism();
     this.createDiamond();
-    this.createExplosion();
-    this.recreateAsteroids();
+    // this.recreateAsteroids();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
@@ -346,6 +345,16 @@ class GameScene extends Scene {
             })
             this.diamond = true;
           }
+
+          // if (this.asteroidGroup.getChildren().length == 0){
+          //   this.createAsteroid();
+          // }
+          // if (this.asteroidGroup1.getChildren().length == 0){
+          //   this.createAsteroid();
+          // }
+          // if (this.asteroidGroup2.getChildren().length == 0){
+          //   this.createAsteroid();
+          // }
         }
 }
 

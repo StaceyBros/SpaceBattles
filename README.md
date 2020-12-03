@@ -30,7 +30,7 @@ After the ship has collected a certain amount of points an enemy ship will appea
 
 ### Links
 
-[SPACE BATTLES](https://phaser.io/examples)
+[SPACE BATTLES](https://staceybros.github.io/SpaceBattles/)
 
 [Phaser 3 examples](https://phaser.io/examples)
 

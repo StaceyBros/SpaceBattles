@@ -41,7 +41,7 @@ class GameScene extends Scene {
     this.createPrism();
     this.createDiamond();
     this.createExplosion();
-
+    this.recreateAsteroids();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
@@ -129,15 +129,17 @@ class GameScene extends Scene {
         child.setVelocityY(Phaser.Math.FloatBetween(100,20))
     })
 
-
-
     this.physics.add.collider(this.asteroidGroup);
     this.physics.add.collider(this.asteroidGroup, this.asteroidGroup1);
     this.physics.add.collider(this.asteroidGroup1, this.asteroidGroup2);
     this.physics.add.collider(this.asteroidGroup, this.asteroidGroup2);
-    this.physics.add.collider(this.ship, this.asteroidGroup);
-    this.physics.add.collider(this.ship, this.asteroidGroup1);
-    this.physics.add.collider(this.ship, this.asteroidGroup2);
+    this.physics.add.collider(this.ship, this.asteroidGroup, this.shipHit1, null, this);
+    this.physics.add.collider(this.ship, this.asteroidGroup1, this.shipHit2, null, this);
+    this.physics.add.collider(this.ship, this.asteroidGroup2, this.shipHit3, null, this);
+
+  }
+
+  shipHit3() {
 
   }
 
@@ -146,6 +148,8 @@ class GameScene extends Scene {
       this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
+    // =======================================================
+    // Jewels
     createPrism(){
 
       this.prism = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550), 'prism').setScale(0.7);
@@ -195,6 +199,8 @@ class GameScene extends Scene {
       this.diamond = false;
     }
 
+    //===================================================================
+    //Bullets
     createBullet(){
 
       this.bulletGroup = this.physics.add.group({
@@ -227,10 +233,6 @@ class GameScene extends Scene {
         frameRate: 48,
         repeat: false
       });
-
-    }
-
-    createExplosion(){
 
     }
 
@@ -319,6 +321,9 @@ class GameScene extends Scene {
             this.prism = true;
           }
 
+
+          //=================================
+          //Calls the diamond 5 seconds after it collected
           if (this.diamond === false){
             this.time.addEvent({
             delay: 20000,

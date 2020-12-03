@@ -62,9 +62,12 @@ class GameScene extends Scene {
     this.explode = this.sound.add('explode');
     this.ping = this.sound.add('ping');
 
+    this.explode.setVolume(.2);
+    this.ping.setVolume(.5);
+
     this.soundTrack.play();
     this.soundTrack.loop = true;
-    this.soundTrack.setVolume(.1);
+    this.soundTrack.setVolume(.2);
   }
 
   // ===============================================================
@@ -376,13 +379,9 @@ class GameScene extends Scene {
       this.bulletGroup.children.iterate(function (child) {
 
         if (child.y === 0){
-          this.child.destroy();
+          child.remove();
         }
       })
-
-      if (this.bulletGroup.setY === 0){
-        this.bulletGroup.destroy;
-      }
 
       this.physics.add.collider( this.bulletGroup,this.asteroidGroup, this.hit1, null, this);
 

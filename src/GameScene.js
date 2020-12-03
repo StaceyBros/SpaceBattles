@@ -24,6 +24,8 @@ class GameScene extends Scene {
     });
     this.load.audio('soundTrack', ['assets/audio/Patrol.mp3', 'assets/audio/Patrol.ogg']);
     this.load.audio('laser', 'assets/audio/laserfire.ogg');
+    this.load.audio('explode', ['assets/audio/explode.ogg','assets/audio/explode.wav']);
+    this.load.audio('ping', 'assets/audio/p-ping.mp3');
     }
 
   // ===============================================================
@@ -34,14 +36,13 @@ class GameScene extends Scene {
     this.background = this.add.tileSprite(0, 0, 900, 600, "background")
     .setOrigin(0);
 
-    this.laser = this.sound.add('laser');
-
-    this.createMusic();
+    this.createSound();
     this.createShip();
     this.createAsteroid();
     this.createCursor();
     this.createPrism();
     this.createDiamond();
+    this.makeAsteroids();
     // this.recreateAsteroids();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
@@ -51,13 +52,23 @@ class GameScene extends Scene {
 
   }
 
-  createMusic(){
+  // ===============================================================
+  // Sound
+
+  createSound(){
 
     this.soundTrack = this.sound.add('soundTrack');
+    this.laser = this.sound.add('laser');
+    this.explode = this.sound.add('explode');
+    this.ping = this.sound.add('ping');
+
     this.soundTrack.play();
     this.soundTrack.loop = true;
     this.soundTrack.setVolume(.1);
   }
+
+  // ===============================================================
+  // Ship
 
   createShip(){
     this.ship = this.physics.add.sprite(450, 520, 'ship').setScale(.5);
@@ -83,6 +94,9 @@ class GameScene extends Scene {
       repeat: false
     });
     }
+
+    //========================================================
+    //Create start game asteroids
 
     createAsteroid(){
 
@@ -158,12 +172,97 @@ class GameScene extends Scene {
     this.physics.add.collider(this.asteroidGroup2,this.ship,this.shipHit3, null, this);
   }
 
+  //========================================================
+  //Once detroyed remake asteroids
+  makeAsteroids(){
+
+    if (this.asteroidGroup.getChildren().length == 0){
+      this.asteroidGroup = this.physics.add.group({
+        key:['asteroid'],
+        frameQuantity: 5,
+        angularVelocity: 12,
+        bounceX: .5,
+        bounceY: .5,
+        CollideWorldBounds: true,
+        setXY: { x: 9, y: 1, stepX:70 },
+        setScale: { x: 0.1, y: 0.1 }
+      });
+
+      this.asteroidGroup.children.iterate(function (child) {
+        var xx = Math.floor(Math.random() * 800);
+        var yy = Math.floor(Math.random() * 500);
+
+        child.x = xx;
+        child.y = yy;
+
+        child.setVelocityY(Phaser.Math.FloatBetween(80,20))
+      })
+    }
+
+      if(this.asteroidGroup1.getChildren().length == 0){
+        this.asteroidGroup1 = this.physics.add.group({
+          key:['asteroid'],
+          frameQuantity: 1,
+          angularVelocity: 12,
+          bounceX: .5,
+          bounceY: .5,
+          CollideWorldBounds: true,
+          setXY: { x: 12, y: 1, stepX:70 },
+          setScale: { x: 0.35, y: 0.35 }
+        });
+
+        this.asteroidGroup1.children.iterate(function (child) {
+          var xx = Math.floor(Math.random() * 800);
+          var yy = Math.floor(Math.random() * 500);
+
+          child.x = xx;
+          child.y = yy;
+
+          child.setVelocityY(Phaser.Math.FloatBetween(100,20))
+        })
+      }
+
+
+      if(this.asteroidGroup2.getChildren().length == 0){
+        this.asteroidGroup2 = this.physics.add.group({
+          key:['asteroid'],
+          frameQuantity: 3,
+          angularVelocity: 20,
+          bounceX: .5,
+          bounceY: .5,
+          CollideWorldBounds: true,
+          setXY: { x: 12, y: 1, stepX:70 },
+          setScale: { x: 0.25, y: 0.25 }
+        });
+      }
+
+      this.asteroidGroup2.children.iterate(function (child) {
+        var xx = Math.floor(Math.random() * 800);
+        var yy = Math.floor(Math.random() * 500);
+
+        child.x = xx;
+        child.y = yy;
+
+        child.setVelocityY(Phaser.Math.FloatBetween(100,20))
+      })
+
+    this.physics.add.collider(this.asteroidGroup);
+    this.physics.add.collider(this.asteroidGroup, this.asteroidGroup1);
+    this.physics.add.collider(this.asteroidGroup1, this.asteroidGroup2);
+    this.physics.add.collider(this.asteroidGroup, this.asteroidGroup2);
+    this.physics.add.collider(this.asteroidGroup,this.ship,this.shipHit1, null, this);
+    this.physics.add.collider(this.asteroidGroup1,this.ship,this.shipHit2, null, this);
+    this.physics.add.collider(this.asteroidGroup2,this.ship,this.shipHit3, null, this);
+  }
+
   shipHit1(asteroid, ship) {
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
       this.explosion.play('boom');
 
       this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
       this.explosion.play('boom');
+
+      this.explode.play();
 
       this.physics.pause();
       this.soundTrack.pause();
@@ -173,11 +272,13 @@ class GameScene extends Scene {
   }
 
   shipHit2(asteroid, ship) {
-      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(2);
       this.explosion.play('boom');
 
-      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
+      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(2);
       this.explosion.play('boom');
+
+      this.explode.play();
 
       this.physics.pause();
       this.soundTrack.pause();
@@ -187,11 +288,13 @@ class GameScene extends Scene {
   }
 
   shipHit3(asteroid, ship) {
-      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(1.2);
       this.explosion.play('boom');
 
-      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
+      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(1.2);
       this.explosion.play('boom');
+
+      this.explode.play();
 
       this.physics.pause();
       this.soundTrack.pause();
@@ -205,7 +308,7 @@ class GameScene extends Scene {
     }
 
     // =======================================================
-    // Jewels
+    // Create and collect Rubies
     createPrism(){
 
       this.prism = this.physics.add.sprite(Math.floor(Math.random() * 850), Math.floor(Math.random() * 550), 'prism').setScale(0.7);
@@ -241,6 +344,7 @@ class GameScene extends Scene {
 
     collectPrism(ship, prism) {
       prism.disableBody(true, true);
+      this.ping.play();
 
       this.score += 10,
       this.scoreText.setText('Score: ' + this.score);
@@ -249,6 +353,7 @@ class GameScene extends Scene {
 
     collectDiamond(ship, diamond) {
       diamond.disableBody(true, true);
+      this.ping.play();
 
       this.score += 60,
       this.scoreText.setText('Score: ' + this.score);
@@ -292,13 +397,13 @@ class GameScene extends Scene {
 
     }
 
-
-
     hit1(bullet, asteroid){
       bullet.destroy();
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
       this.explosion.play('boom');
       asteroid.destroy();
+      this.explode.play();
+      this.makeAsteroids();
     }
 
     hit2(bullet, asteroid){
@@ -306,6 +411,8 @@ class GameScene extends Scene {
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(2);
       this.explosion.play('boom');
       asteroid.destroy();
+      this.explode.play();
+      this.makeAsteroids();
     }
 
     hit3(bullet, asteroid){
@@ -313,6 +420,8 @@ class GameScene extends Scene {
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(1.3);
       this.explosion.play('boom');
       asteroid.destroy();
+      this.explode.play();
+      this.makeAsteroids();
     }
 
 
@@ -358,6 +467,7 @@ class GameScene extends Scene {
 
     //=================================
     //Calls the prism 5 seconds after it collected
+
           if (this.prism === false){
             this.time.addEvent({
             delay: 7000,
@@ -408,14 +518,8 @@ class GameScene extends Scene {
             this.diamond = true;
           }
 
-          // if (this.asteroidGroup.getChildren().length == 0){
-          //   this.createAsteroid();
-          // }
-          // if (this.asteroidGroup1.getChildren().length == 0){
-          //   this.createAsteroid();
-          // }
-          // if (this.asteroidGroup2.getChildren().length == 0){
-          //   this.createAsteroid();
+          // if this.bullet === this.config.height{
+          //     this.bullet.destroy();
           // }
         }
 }

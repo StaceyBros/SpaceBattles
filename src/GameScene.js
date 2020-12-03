@@ -7,6 +7,8 @@ class GameScene extends Scene {
     super ('game')
 
     this.score = 0;
+    this.gameOver = false;
+    this.gameWin = false;
   }
   // ===============================================================
   // Preload
@@ -44,14 +46,17 @@ class GameScene extends Scene {
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
+    this.gameOverText = this.add.text(280, 300, 'Game Over Click to play again', {fontSize: '42px', fill: 'red'}).setOrigin(.25);
+    this.gameOverText.visible = false;
+
   }
 
   createMusic(){
 
-    this.sound = this.sound.add('soundTrack');
-    this.sound.play();
-    this.sound.loop = true;
-    this.sound.setVolume(.1);
+    this.soundTrack = this.sound.add('soundTrack');
+    this.soundTrack.play();
+    this.soundTrack.loop = true;
+    this.soundTrack.setVolume(.1);
   }
 
   createShip(){
@@ -61,6 +66,22 @@ class GameScene extends Scene {
 
     //Ship doesn't get past game bounderies
     this.ship.setCollideWorldBounds(true);
+
+    const frameNames = this.anims.generateFrameNumbers('exp');
+
+    //reverses the frameNumbers array in f2
+    const f2 = frameNames.slice();
+    f2.reverse();
+
+    // adds the two arrays
+    const f3 = f2.concat(frameNames);
+
+    this.anims.create({
+      key: 'boom',
+      frames: f3,
+      frameRate: 48,
+      repeat: false
+    });
     }
 
     createAsteroid(){
@@ -132,16 +153,52 @@ class GameScene extends Scene {
     this.physics.add.collider(this.asteroidGroup, this.asteroidGroup1);
     this.physics.add.collider(this.asteroidGroup1, this.asteroidGroup2);
     this.physics.add.collider(this.asteroidGroup, this.asteroidGroup2);
-    this.physics.add.collider(this.ship, this.asteroidGroup, this.shipHit1, null, this);
-    this.physics.add.collider(this.ship, this.asteroidGroup1, this.shipHit2, null, this);
-    this.physics.add.collider(this.ship, this.asteroidGroup2, this.shipHit3, null, this);
-
+    this.physics.add.collider(this.asteroidGroup,this.ship,this.shipHit1, null, this);
+    this.physics.add.collider(this.asteroidGroup1,this.ship,this.shipHit2, null, this);
+    this.physics.add.collider(this.asteroidGroup2,this.ship,this.shipHit3, null, this);
   }
 
-  shipHit3() {
+  shipHit1(asteroid, ship) {
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
 
+      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
+
+      this.physics.pause();
+      this.soundTrack.pause();
+      this.gameOver = true;
+      this.gameOverText.visible = true
+      this.input.on('pointerdown', () => this.scene.start('preload'))
   }
 
+  shipHit2(asteroid, ship) {
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
+
+      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
+
+      this.physics.pause();
+      this.soundTrack.pause();
+      this.gameOver = true;
+      this.gameOverText.visible = true
+      this.input.on('pointerdown', () => this.scene.start('preload'))
+  }
+
+  shipHit3(asteroid, ship) {
+      this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
+
+      this.explosion = this.add.sprite(ship.x, ship.y, 'exp').setScale(.8);
+      this.explosion.play('boom');
+
+      this.physics.pause();
+      this.soundTrack.pause();
+      this.gameOver = true;
+      this.gameOverText.visible = true
+      this.input.on('pointerdown', () => this.scene.start('preload'))
+  }
     createCursor() {
       this.cursors = this.input.keyboard.createCursorKeys();
       this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -235,6 +292,8 @@ class GameScene extends Scene {
 
     }
 
+
+
     hit1(bullet, asteroid){
       bullet.destroy();
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(.8);
@@ -243,18 +302,21 @@ class GameScene extends Scene {
     }
 
     hit2(bullet, asteroid){
-      asteroid.destroy();
+      bullet.destroy();
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(2);
       this.explosion.play('boom');
-      bullet.destroy();
+      asteroid.destroy();
     }
 
     hit3(bullet, asteroid){
-      asteroid.destroy();
+      bullet.destroy();
       this.explosion = this.add.sprite(asteroid.x, asteroid.y, 'exp').setScale(1.3);
       this.explosion.play('boom');
-      bullet.destroy();
+      asteroid.destroy();
     }
+
+
+
 
 
 

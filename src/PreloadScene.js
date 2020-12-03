@@ -13,7 +13,7 @@ class PreloadScene extends Scene {
   create() {
     const space = this.add.image(500, 250, 'space');
 
-    const play = this.add.text(370, 250, 'play').setScale(4).setOrigin(0);;
+    const play = this.add.text(370, 250, 'Play').setScale(4).setOrigin(0);
 
 
     this.cache.bitmapFont.add('knighthawks', Phaser.GameObjects.RetroFont.Parse(this, config));

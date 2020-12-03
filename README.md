@@ -1,12 +1,14 @@
-# Phaser 3 Webpack Project Template
+# SPACE BATTLES
 
-A Phaser 3 Project Template
+This game was created for a project at General Assembly Sydney. It was made with Phaser3, Nodejs and CSS.
 
-### Requirements
+The aim of the game is to collect as many gems as you can without being struck by an aseroid.
+
+### Playing the game
 
 We need [Node.js](https://nodejs.org) to install and run scripts.
 
-## Install and run
+## How the code works
 
 `npm install webpack webpack-cli -g`
 
@@ -21,16 +23,18 @@ Run next commands in your terminal:
 
 ---
 
-## Getting Started
+## Bugs
 
-After running `npm start` visit: http://localhost:8000 in your browser. Your project is running here! 
+After running `npm start` visit: http://localhost:8000 in your browser. Your project is running here!
 
 ### src directory
 
-Add your project files to the src directory. Only files in this directory will included in the project build! 
+Add your project files to the src directory. Only files in this directory will included in the project build!
 
 Updating and saving files in this folder will automatically rebuild the project and reload the project in the browser!
 
-### assets directory
+### Links
 
-You must keep all of the file assets in the assets folder. This inlcudes images, audio and other data your project may load. 
+Phaser 3 examples
+
+https://phaser.io/examples

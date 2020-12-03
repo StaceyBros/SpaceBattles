@@ -43,7 +43,7 @@ class GameScene extends Scene {
     this.createPrism();
     this.createDiamond();
     this.makeAsteroids();
-    // this.recreateAsteroids();
+    // this.resetBullets();
 
     this.scoreText = this.add.text(16,16, 'score: 0', { fontSize: '32px', fill: 'white' });
 
@@ -107,7 +107,7 @@ class GameScene extends Scene {
         bounceX: .5,
         bounceY: .5,
         CollideWorldBounds: true,
-        setXY: { x: 9, y: 1, stepX:70 },
+        setXY: { x: 9, y: 3, stepX:70 },
         setScale: { x: 0.1, y: 0.1 }
       });
 
@@ -118,7 +118,7 @@ class GameScene extends Scene {
         bounceX: .5,
         bounceY: .5,
         CollideWorldBounds: true,
-        setXY: { x: 12, y: 1, stepX:70 },
+        setXY: { x: 12, y: 3, stepX:70 },
         setScale: { x: 0.35, y: 0.35 }
       });
 
@@ -129,7 +129,7 @@ class GameScene extends Scene {
         bounceX: .5,
         bounceY: .5,
         CollideWorldBounds: true,
-        setXY: { x: 12, y: 1, stepX:70 },
+        setXY: { x: 12, y: 3, stepX:70 },
         setScale: { x: 0.25, y: 0.25 }
       });
 
@@ -373,6 +373,10 @@ class GameScene extends Scene {
       });
       this.bulletGroup.setVelocityY(-160);
 
+      if (this.bulletGroup.setY === 0){
+        this.bulletGroup.destroy;
+      }
+
       this.physics.add.collider( this.bulletGroup,this.asteroidGroup, this.hit1, null, this);
 
       this.physics.add.collider( this.bulletGroup,this.asteroidGroup1, this.hit2, null, this);
@@ -424,11 +428,6 @@ class GameScene extends Scene {
       this.makeAsteroids();
     }
 
-
-
-
-
-
     // =====================================================
     // Update
 
@@ -463,6 +462,9 @@ class GameScene extends Scene {
         if(this.keySpace.isDown){
               this.createBullet();
               this.laser.play();
+
+              // if (this.bulletGroup === this.config.x && this.bulletGroup === this.config.x )
+              // this.bulletGroup.destroy();
           }
 
     //=================================
@@ -518,9 +520,6 @@ class GameScene extends Scene {
             this.diamond = true;
           }
 
-          // if this.bullet === this.config.height{
-          //     this.bullet.destroy();
-          // }
         }
 }
 

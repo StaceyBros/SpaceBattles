@@ -1,40 +1,39 @@
 # SPACE BATTLES
 
-This game was created for a project at General Assembly Sydney. It was made with Phaser3, Nodejs and CSS.
+This game was created for a project at General Assembly Sydney. It was made with Phaser3, Nodejs, HTML and CSS.
 
-The aim of the game is to collect as many gems as you can without being struck by an aseroid.
+The aim of the game is to collect as many gems as you can without being struck by an asteroid.
 
 ### Playing the game
 
-We need [Node.js](https://nodejs.org) to install and run scripts.
+![The game starts on a preload scene.](assets/preload.png)
 
-## How the code works
+Click to play and it moves onto the game scene.
 
-`npm install webpack webpack-cli -g`
+![Game Scene](assets/gameScene.png)
 
-`npm update`
+The arrow keys control the direction that the ship goes(up, down, right, left). The space bar fires bullets.
 
-Run next commands in your terminal:
+## Challenges
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies and launch browser with examples.|
-| `npm start` | Launch browser to show the examples. <br> Press `Ctrl + c` to kill **http-server** process. |
-
----
+When creating an event that needs to be happen/change during the game my first instinct was always to put it in the update() function of phaser. This usually created an infinite loop so I've had to go back to each event and call the functions in a slightly different way to suit the scenario.
 
 ## Bugs
 
-After running `npm start` visit: http://localhost:8000 in your browser. Your project is running here!
+If you keep the space bar pressed down the frame
+rate starts to get slower.
+Because the createBullet is being called in update() an infinite loop is being created while the space bar is pressed down. And because the bullets aren't destroyed it creates a lag,
 
-### src directory
+## Future Plan
 
-Add your project files to the src directory. Only files in this directory will included in the project build!
-
-Updating and saving files in this folder will automatically rebuild the project and reload the project in the browser!
+After the ship has collected a certain amount of points an enemy ship will appear. The ship will need to beat the enemy to win the game.
 
 ### Links
 
-Phaser 3 examples
+[Phaser 3 examples](https://phaser.io/examples)
 
-https://phaser.io/examples
+[Phaser GitHub](https://github.com/photonstorm)
+
+[Phaser 3 Tutorials - Willam Clarkson](https://www.youtube.com/channel/UCnw4nJg3VWgXz6itvH8NkgQ)
+
+[Phaser 3 Tutorials with Nodejs- Mitchell Hudson](https://www.youtube.com/c/MitchellHudson/videos)

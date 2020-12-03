@@ -135,7 +135,7 @@ class GameScene extends Scene {
 
       this.asteroidGroup.children.iterate(function (child) {
         var xx = Math.floor(Math.random() * 800);
-        var yy = Math.floor(Math.random() * 500);
+        var yy = Math.floor(Math.random() * 300);
 
         child.x = xx;
         child.y = yy;
@@ -145,7 +145,7 @@ class GameScene extends Scene {
 
       this.asteroidGroup1.children.iterate(function (child) {
         var xx = Math.floor(Math.random() * 800);
-        var yy = Math.floor(Math.random() * 500);
+        var yy = Math.floor(Math.random() * 300);
 
         child.x = xx;
         child.y = yy;
@@ -155,7 +155,7 @@ class GameScene extends Scene {
 
       this.asteroidGroup2.children.iterate(function (child) {
         var xx = Math.floor(Math.random() * 800);
-        var yy = Math.floor(Math.random() * 500);
+        var yy = Math.floor(Math.random() * 300);
 
         child.x = xx;
         child.y = yy;
@@ -176,7 +176,7 @@ class GameScene extends Scene {
   //Once detroyed remake asteroids
   makeAsteroids(){
 
-    if (this.asteroidGroup.getChildren().length == 0){
+    if (this.asteroidGroup.getChildren().length === 0){
       this.asteroidGroup = this.physics.add.group({
         key:['asteroid'],
         frameQuantity: 5,
@@ -190,16 +190,16 @@ class GameScene extends Scene {
 
       this.asteroidGroup.children.iterate(function (child) {
         var xx = Math.floor(Math.random() * 800);
-        var yy = Math.floor(Math.random() * 500);
+        var yy = Math.floor(Math.random() * -10);
 
         child.x = xx;
         child.y = yy;
 
-        child.setVelocityY(Phaser.Math.FloatBetween(80,20))
+        // child.setVelocityY(Phaser.Math.FloatBetween(80,20))
       })
     }
 
-      if(this.asteroidGroup1.getChildren().length == 0){
+      if(this.asteroidGroup1.getChildren().length === 0){
         this.asteroidGroup1 = this.physics.add.group({
           key:['asteroid'],
           frameQuantity: 1,
@@ -213,7 +213,7 @@ class GameScene extends Scene {
 
         this.asteroidGroup1.children.iterate(function (child) {
           var xx = Math.floor(Math.random() * 800);
-          var yy = Math.floor(Math.random() * 500);
+          var yy = Math.floor(Math.random() * -10);
 
           child.x = xx;
           child.y = yy;
@@ -223,7 +223,7 @@ class GameScene extends Scene {
       }
 
 
-      if(this.asteroidGroup2.getChildren().length == 0){
+      if(this.asteroidGroup2.getChildren().length === 0){
         this.asteroidGroup2 = this.physics.add.group({
           key:['asteroid'],
           frameQuantity: 3,
@@ -238,7 +238,7 @@ class GameScene extends Scene {
 
       this.asteroidGroup2.children.iterate(function (child) {
         var xx = Math.floor(Math.random() * 800);
-        var yy = Math.floor(Math.random() * 500);
+        var yy = Math.floor(Math.random() * -10);
 
         child.x = xx;
         child.y = yy;
@@ -373,6 +373,13 @@ class GameScene extends Scene {
       });
       this.bulletGroup.setVelocityY(-160);
 
+      this.bulletGroup.children.iterate(function (child) {
+
+        if (child.y === 0){
+          this.child.destroy();
+        }
+      })
+
       if (this.bulletGroup.setY === 0){
         this.bulletGroup.destroy;
       }
@@ -462,6 +469,7 @@ class GameScene extends Scene {
         if(this.keySpace.isDown){
               this.createBullet();
               this.laser.play();
+
 
               // if (this.bulletGroup === this.config.x && this.bulletGroup === this.config.x )
               // this.bulletGroup.destroy();
